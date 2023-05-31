@@ -7,7 +7,6 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import hs.project.qrcode.databinding.ActivityScanqrBinding
-import hs.project.qrcode.databinding.CustomBarcodeScannerBinding
 
 class ScanQRActivity : AppCompatActivity() {
 
@@ -40,7 +39,7 @@ class ScanQRActivity : AppCompatActivity() {
     }
 
     fun onScanButtonClicked(){
-        // 가로모드
+        // 세로모드
         var options = ScanOptions()
         options.setOrientationLocked(false)
         barcodeLauncher.launch(ScanOptions())
@@ -51,7 +50,7 @@ class ScanQRActivity : AppCompatActivity() {
         options.setOrientationLocked(false)
         options.setBeepEnabled(true)
         options.setPrompt("커스텀 QR 스캐너")
-        options.captureActivity = CustomBarcodeScannerBinding::class.java
+        options.captureActivity = CustomQrScannerActivity::class.java
 
         barcodeLauncher.launch(options)
     }

@@ -31,6 +31,9 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
+        <activity android:name=".CustomQrScannerActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
