@@ -1,12 +1,16 @@
 package hs.project.qrcode
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import hs.project.qrcode.databinding.ActivityScanqrBinding
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.concurrent.timerTask
 
 class ScanQRActivity : AppCompatActivity() {
 
@@ -18,7 +22,23 @@ class ScanQRActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Scanned : " + result.contents, Toast.LENGTH_SHORT).show()
 
-            binding.txtResult.text = result.contents.toString()
+            Log.d("myTag result","${result.contents}")
+
+            if (result.contents == "start") {
+                var time = 0
+                val timer = Timer()
+
+                val timerTask = object : TimerTask() {
+                    override fun run() {
+                        time++
+                        runOnUiThread {
+                            binding.txtResult.text = convertIntToTime(time)
+                        }
+                    }
+                }
+
+                timer.scheduleAtFixedRate(timerTask, 0, 10)
+            }
         }
     }
 
@@ -38,7 +58,7 @@ class ScanQRActivity : AppCompatActivity() {
 
     }
 
-    fun onScanButtonClicked(){
+    private fun onScanButtonClicked(){
         // 세로모드
         var options = ScanOptions()
         options.setOrientationLocked(false)
@@ -53,6 +73,14 @@ class ScanQRActivity : AppCompatActivity() {
         options.captureActivity = CustomQrScannerActivity::class.java
 
         barcodeLauncher.launch(options)
+    }
+
+    private fun convertIntToTime(time: Int): String {
+        var min = time / 60
+        val hour = min / 60
+        val sec = time % 60
+        min %= 60
+        return String.format("%02d:%02d:%02d", hour, min, sec)
     }
 
 }
