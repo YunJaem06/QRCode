@@ -8,8 +8,10 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import hs.project.qrcode.databinding.ActivityScanqrBinding
-import java.util.Timer
-import java.util.TimerTask
+import org.json.JSONException
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.timerTask
 
 class ScanQRActivity : AppCompatActivity() {
@@ -22,23 +24,26 @@ class ScanQRActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Scanned : " + result.contents, Toast.LENGTH_SHORT).show()
 
-            Log.d("myTag result","${result.contents}")
+            val jsonData = result.contents
 
-            if (result.contents == "start") {
-                var time = 0
-                val timer = Timer()
+            try {
 
-                val timerTask = object : TimerTask() {
-                    override fun run() {
-                        time++
-                        runOnUiThread {
-                            binding.txtResult.text = convertIntToTime(time)
-                        }
-                    }
+                val jsonObject = JSONObject(jsonData)
+
+                val meetId = jsonObject.getInt("meetId")
+                val step = jsonObject.getInt("step")
+
+                if (meetId == 1 && step == -1){
+                    val currentDateTime = getCurrentDateTime()
+                    binding.txtResult.text = currentDateTime
                 }
 
-                timer.scheduleAtFixedRate(timerTask, 0, 10)
+
+
+            } catch (e: JSONException) {
+                e.printStackTrace()
             }
+
         }
     }
 
@@ -81,6 +86,12 @@ class ScanQRActivity : AppCompatActivity() {
         val sec = time % 60
         min %= 60
         return String.format("%02d:%02d:%02d", hour, min, sec)
+    }
+
+    fun getCurrentDateTime(): String {
+        val currentDate = Date()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(currentDate)
     }
 
 }

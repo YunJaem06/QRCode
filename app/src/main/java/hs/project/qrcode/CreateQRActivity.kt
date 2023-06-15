@@ -19,7 +19,7 @@ class CreateQRActivity : AppCompatActivity() {
 
         try {
             val barcodeEncode = BarcodeEncoder()
-            val bitmap = barcodeEncode.encodeBitmap("start", BarcodeFormat.QR_CODE, 400, 400)
+            val bitmap = barcodeEncode.encodeBitmap("\"meetId\":1,\"step\":-1", BarcodeFormat.QR_CODE, 400, 400)
             val imageViewQrCode : ImageView = binding.imageViewQrCode
             imageViewQrCode.setImageBitmap(bitmap)
         } catch (e : Exception) {
